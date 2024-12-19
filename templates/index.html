@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Sistem Informasi Parkir</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --border-radius: 10px;
+        --padding-input: 12px 15px;
+      }
+      .login-container {
+        min-height: 100vh;
+        background: var(--primary-gradient);
+      }
+      .login-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
+      .login-card-header {
+        background: transparent;
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+      .login-input {
+        border-radius: var(--border-radius);
+        padding: var(--padding-input);
+      }
+      .btn-login {
+        border-radius: var(--border-radius);
+        padding: var(--padding-input);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: var(--primary-gradient);
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+      .password-toggle {
+        cursor: pointer;
+      }
+      .alert {
+        display: none;
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease-out;
+      }
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      .loading-spinner {
+        display: none;
+        width: 1rem;
+        height: 1rem;
+        margin-right: 0.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="login-container d-flex align-items-center justify-content-center"
+    >
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+            <!-- Alert Messages -->
+            <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>
+              <span id="errorMessage"></span>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert" id="successAlert">
+              <i class="bi bi-check-circle-fill me-2"></i>
+              <span id="successMessage"></span>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="card login-card">
+              <div class="card-header login-card-header text-center pt-4">
+                <h3 class="mb-0">SISTEM INFORMASI PARKIR</h3>
+              </div>
+              <div class="card-body p-4">
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                  <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <div class="input-group">
+                      <span class="input-group-text">
+                        <i class="bi bi-person"></i>
+                      </span>
+                      <input
+                        type="text"
+                        class="form-control login-input"
+                        id="username"
+                        name="username"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                      <span class="input-group-text">
+                        <i class="bi bi-lock"></i>
+                      </span>
+                      <input
+                        type="password"
+                        class="form-control login-input"
+                        id="password"
+                        name="password"
+                        required
+                      />
+                      <button
+                        class="btn btn-outline-secondary password-toggle"
+                        type="button"
+                        onclick="togglePasswordVisibility()"
+                      >
+                        <i class="bi bi-eye"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn btn-login btn-primary w-100 mb-3"
+                    id="loginButton"
+                  >
+                    <span class="spinner-border spinner-border-sm loading-spinner" role="status" aria-hidden="true" id="loadingSpinner"></span>
+                    <span id="loginButtonText">Masuk</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // DOM Elements
+      const loginForm = document.getElementById('loginForm');
+      const loginButton = document.getElementById('loginButton');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const loginButtonText = document.getElementById('loginButtonText');
+      const errorAlert = document.getElementById('errorAlert');
+      const successAlert = document.getElementById('successAlert');
+      const errorMessage = document.getElementById('errorMessage');
+      const successMessage = document.getElementById('successMessage');
+
+      const getFormData = () => ({
+        username: document.querySelector("#username").value.trim(),
+        password: document.querySelector("#password").value.trim(),
+      });
+
+      const validateForm = (formData) => {
+        if (!formData.username) {
+          showError('Username tidak boleh kosong');
+          return false;
+        }
+        if (!formData.password) {
+          showError('Password tidak boleh kosong');
+          return false;
+        }
+        return true;
+      };
+
+      const showError = (message) => {
+        errorMessage.textContent = message;
+        errorAlert.style.display = 'block';
+        successAlert.style.display = 'none';
+        setTimeout(() => {
+          errorAlert.style.display = 'none';
+        }, 5000);
+      };
+
+      const showSuccess = (message) => {
+        successMessage.textContent = message;
+        successAlert.style.display = 'block';
+        errorAlert.style.display = 'none';
+        setTimeout(() => {
+          successAlert.style.display = 'none';
+        }, 5000);
+      };
+
+      const setLoading = (isLoading) => {
+        loadingSpinner.style.display = isLoading ? 'inline-block' : 'none';
+        loginButtonText.textContent = isLoading ? 'Memproses...' : 'Masuk';
+        loginButton.disabled = isLoading;
+        const inputs = loginForm.querySelectorAll('input, button');
+        inputs.forEach(input => input.disabled = isLoading);
+      };
+
+      const togglePasswordVisibility = () => {
+        const passwordInput = document.querySelector("#password");
+        const icon = document.querySelector(".password-toggle i");
+        const isPasswordVisible = passwordInput.type === "text";
+        passwordInput.type = isPasswordVisible ? "password" : "text";
+        icon.classList.toggle("bi-eye-slash", !isPasswordVisible);
+        icon.classList.toggle("bi-eye", isPasswordVisible);
+      };
+
+      async function handleLogin(event) {
+        event.preventDefault();
+
+        const formData = getFormData();
+        if (!validateForm(formData)) {
+          return;
+        }
+
+        setLoading(true);
+
+        try {
+          const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify(formData),
+            credentials: 'include' // Untuk mengirim cookies jika ada
+          });
+
+          let result;
+          const contentType = response.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            result = await response.json();
+          } else {
+            throw new Error('Server returned non-JSON response');
+          }
+
+          if (response.ok) {
+            showSuccess(result.message || 'Login berhasil');
+            setTimeout(() => {
+              window.location.href = "/dashboard";
+            }, 1000);
+          } else {
+            showError(result.error || 'Login gagal. Silakan coba lagi.');
+          }
+        } catch (error) {
+          console.error("Error saat login:", error);
+          showError('Gagal terhubung ke server. Silakan coba lagi nanti.');
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      // Clear alerts when clicking close button
+      document.querySelectorAll('.alert .btn-close').forEach(button => {
+        button.addEventListener('click', () => {
+          button.closest('.alert').style.display = 'none';
+        });
+      });
+    </script>
+  </body>
+</html>

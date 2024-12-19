@@ -1,0 +1,279 @@
+{% extends "base.html" %} {% block title %}Admin Dashboard{% endblock %} {%
+block content %}
+<!-- Sidebar -->
+
+<!-- Main Content -->
+<div class="main-content">
+  <!-- Toggle Button for Mobile -->
+  <button
+    class="btn btn-dark d-md-none mb-3"
+    type="button"
+    onclick="toggleSidebar()"
+  >
+    <i class="bi bi-list"></i> Menu
+  </button>
+
+  <div class="row g-3 mb-4">
+    <!-- Welcome Section -->
+    <div class="col-12">
+      <div
+        class="card bg-gradient-primary border-0 overflow-hidden position-relative"
+      >
+        <div class="card-body p-4">
+          <div class="row align-items-center">
+            <div class="col-lg-8">
+              <h1 class="display-4 fw-bold text-white mb-3">
+                Welcome to Smart Parking System
+                <div class="fs-2 text-light opacity-100">
+                  Powered by M.KHAIRUL JIMLI ALFUADI
+                </div>
+              </h1>
+              <p class="lead text-light opacity-75 mb-4">
+                Transform your parking management with IoT integration
+              </p>
+              <div class="d-flex gap-3"></div>
+            </div>
+            <div class="col-lg-4 d-none d-lg-block">
+              <div class="text-end">
+                <i
+                  class="bi bi-parking-circle display-1 text-white opacity-25"
+                ></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Animated Background Elements -->
+          <div class="position-absolute top-0 end-0 mt-4 me-4">
+            <i
+              class="bi bi-cpu-fill text-white opacity-10"
+              style="font-size: 8rem"
+            ></i>
+          </div>
+          <div class="position-absolute bottom-0 start-0 mb-4 ms-4">
+            <i
+              class="bi bi-circle-square text-white opacity-10"
+              style="font-size: 6rem"
+            ></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="col-12 col-md-6">
+      <div class="card border-0 bg-white position-relative overflow-hidden">
+        <div class="card-body p-4">
+          <div class="row align-items-center">
+            <!-- Profile Image -->
+            <div class="col-auto">
+              <div class="position-relative">
+                <div class="profile-img-container">
+                  <img
+                    src="{{ url_for('static', filename='images/profile.jpg') }}"
+                    alt="Profile"
+                    class="rounded-circle border border-primary border-3"
+                    style="width: 120px; height: 120px; object-fit: cover"
+                  />
+                  <div class="status-indicator"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Profile Info -->
+            <div class="col">
+              <div class="d-flex align-items-center gap-2 mb-1">
+                <h3 class="mb-0 fw-bold text-dark">M.KHAIRUL JIMLI ALFUADI</h3>
+                <span
+                  class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill"
+                >
+                  <i class="bi bi-shield-check me-1"></i>Developer
+                </span>
+              </div>
+              <div class="text-muted mb-3">
+                <i class="bi bi-credit-card me-2"></i>NIM: 200150128
+              </div>
+              <div class="d-flex gap-3">
+                <div class="d-flex align-items-center">
+                  <div
+                    class="tech-icon bg-primary-subtle text-primary rounded-circle p-2 me-2"
+                  >
+                    <i class="bi bi-code-slash"></i>
+                  </div>
+                  <div class="small">
+                    <div class="text-muted">Department</div>
+                    <div class="fw-medium">Electrical Engineering</div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center">
+                  <div
+                    class="tech-icon bg-success-subtle text-success rounded-circle p-2 me-2"
+                  >
+                    <i class="bi bi-camera"></i>
+                  </div>
+                  <div class="small">
+                    <div class="text-muted">Focus</div>
+                    <div class="fw-medium">IOT</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Decorative Elements -->
+          <div class="position-absolute top-0 end-0 mt-2 me-2 opacity-10">
+            <i class="bi bi-braces text-primary" style="font-size: 4rem"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CSS untuk Sidebar dan Main Content -->
+<style>
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    color: white;
+    background: linear-gradient(180deg, #1a1f3c 0%, #111226 100%);
+    transition: all 0.3s;
+    z-index: 1000;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    margin: 0.2rem 0.8rem;
+    transition: all 0.3s;
+  }
+
+  .nav-link:hover {
+    color: white;
+    background: rgba(77, 124, 254, 0.1);
+    transform: translateX(5px);
+  }
+
+  .nav-link.active {
+    color: white;
+    background: linear-gradient(45deg, #4d7cfe, #2b4db5);
+  }
+
+  .main-content {
+    margin-left: 250px;
+    padding: 20px;
+    transition: all 0.3s;
+  }
+
+  /* Card and Welcome Section Styles */
+  .bg-gradient-primary {
+    background: linear-gradient(45deg, #2937f0, #9f1ae2) !important;
+  }
+
+  .card {
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Profile Card Styles */
+  .profile-img-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .status-indicator {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    width: 12px;
+    height: 12px;
+    background: #22c55e;
+    border: 2px solid white;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .tech-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+
+  /* Animations */
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+  }
+
+  .bi-cpu-fill,
+  .bi-circle-square {
+    animation: pulse 3s infinite ease-in-out;
+  }
+
+  /* Utility Classes */
+  .bg-primary-subtle {
+    background-color: rgba(41, 55, 240, 0.1);
+  }
+
+  .bg-success-subtle {
+    background-color: rgba(34, 197, 94, 0.1);
+  }
+
+  .text-primary {
+    color: #2937f0 !important;
+  }
+
+  .text-success {
+    color: #22c55e !important;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .sidebar {
+      margin-left: -250px;
+    }
+
+    .sidebar.show {
+      margin-left: 0;
+    }
+
+    .main-content {
+      margin-left: 0;
+    }
+
+    .display-4 {
+      font-size: 2.5rem;
+    }
+
+    .lead {
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<!-- JavaScript untuk Toggle Sidebar -->
+<script>
+  function toggleSidebar() {
+    document.querySelector(".sidebar").classList.toggle("show");
+  }
+</script>
+{% endblock %}

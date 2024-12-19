@@ -1,0 +1,128 @@
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+  <div class="d-flex flex-column h-100">
+    <!-- Logo/Brand -->
+    <a class="navbar-brand p-4" href="#">
+      <i class="bi bi-cpu-fill me-2 text-primary"></i>
+      <span class="fw-bold">Smart Parking</span>
+      <div class="brand-subtitle"></div>
+    </a>
+
+    <!-- Sidebar Menu -->
+    <ul class="nav flex-column mt-2">
+      <li class="nav-item">
+        <a
+          class="nav-link {% if request.path == '/dashboard' %}active{% endif %}"
+          href="/dashboard"
+        >
+          <i class="bi bi-house-door"></i>
+          <span class="ms-2">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link {% if request.path == '/parking' %}active{% endif %}"
+          href="/parking"
+        >
+          <i class="bi bi-camera-video"></i>
+          <span class="ms-2">Parking</span>
+        </a>
+      </li>
+    </ul>
+
+    <!-- Profile Section -->
+    <div class="mt-auto p-3 border-top border-light border-opacity-10">
+      <div class="dropdown">
+        <a
+          class="nav-link dropdown-toggle d-flex align-items-center"
+          href="#"
+          id="profileDropdown"
+          role="button"
+          data-bs-toggle="dropdown"
+        >
+          <div class="position-relative">
+            <i class="bi bi-person-circle fs-4"></i>
+            <span class="status-dot online position-absolute"></span>
+          </div>
+          <div class="ms-2">
+            <span class="d-block"> Admin</span>
+            <small class="text-primary">Online</small>
+          </div>
+        </a>
+        <ul
+          class="dropdown-menu dropdown-menu-dark"
+          aria-labelledby="profileDropdown"
+        >
+            <a class="dropdown-item" href="/"
+              ><i class="bi bi-box-arrow-right"></i> Logout</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Updated CSS -->
+<style>
+  /* Sidebar Styles */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background: linear-gradient(180deg, #1a1f3c 0%, #111226 100%);
+    color: #e0e2f1;
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .navbar-brand {
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .brand-subtitle {
+    font-size: 0.75rem;
+    color: #4d7cfe;
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.8rem 1.5rem;
+    margin: 0.2rem 0.8rem;
+    border-radius: 8px;
+    transition: all 0.3s;
+  }
+
+  .nav-link:hover {
+    color: #fff;
+    background: rgba(77, 124, 254, 0.1);
+    transform: translateX(5px);
+  }
+
+  .nav-link.active {
+    color: #fff;
+    background: linear-gradient(45deg, #4d7cfe, #2b4db5);
+  }
+
+  /* Status Dot */
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #2ecc71;
+    border: 2px solid #1a1f3c;
+    border-radius: 50%;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .sidebar {
+      margin-left: -280px;
+      transition: margin 0.3s;
+    }
+    .sidebar.show {
+      margin-left: 0;
+    }
+  }
+</style>
