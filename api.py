@@ -9,10 +9,10 @@ CORS(api_blueprint)
 # Koneksi ke database
 def get_db_connection():
     return mysql.connector.connect(
-        host="localhost",       # Ganti dengan host database Anda
-        user="root",            # Ganti dengan username database Anda
-        password="",            # Ganti dengan password database Anda
-        database="db_iotparkir" # Nama database
+        host="localhost",       
+        user="root",           
+        password="",            
+        database="db_iotparkir" 
     )
 
 # Route untuk API hello (GET)
@@ -77,7 +77,6 @@ def api_login():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
 
-        # Query untuk memeriksa username dan password
         query = """
         SELECT id, username, email FROM users
         WHERE username = %s AND password = %s

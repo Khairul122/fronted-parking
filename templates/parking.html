@@ -351,7 +351,7 @@ function updateParkingTimer2() {
 // Ambil status parkir untuk Parkir 1
 async function fetchParkingStatus() {
     try {
-        const response = await fetch("http://192.168.1.21/backend-parking/parkir1_get.php?sensor_id=ULTRASONIC_01");
+        const response = await fetch("http://localhost/backend-parking/parkir1_get.php?sensor_id=ULTRASONIC_01");
         if (!response.ok) throw new Error("Network response was not ok");
 
         const data = await response.json();
@@ -401,7 +401,7 @@ async function fetchParkingStatus() {
 // Ambil status parkir untuk Parkir 2
 async function fetchParkingStatus2() {
     try {
-        const response = await fetch("http://192.168.1.21/backend-parking/parkir2_get.php?sensor_id=ULTRASONIC_02");
+        const response = await fetch("http://localhost/backend-parking/parkir2_get.php?sensor_id=ULTRASONIC_02");
         if (!response.ok) throw new Error("Network response was not ok");
 
         const data = await response.json();
@@ -457,7 +457,7 @@ async function updateParkingData(duration, cost) {
             biaya: cost,
         };
 
-        const response = await fetch("http://192.168.1.21/backend-parking/parkir1_put.php", {
+        const response = await fetch("http://localhost/backend-parking/parkir1_put.php", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -491,7 +491,7 @@ async function updateParkingData2(duration, cost) {
             biaya: cost,
         };
 
-        const response = await fetch("http://192.168.1.21/backend-parking/parkir2_put.php", {
+        const response = await fetch("http://localhost/backend-parking/parkir2_put.php", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -562,7 +562,7 @@ function displayParkingHistory2() {
 // Fungsi untuk mengambil dan menampilkan riwayat parkir
 async function fetchParkingHistory1() {
     try {
-        const response = await fetch('http://192.168.1.21/backend-parking/tabel_parkir.php?sensor_id=ULTRASONIC_01');
+        const response = await fetch('http://localhost/backend-parking/tabel_parkir.php?sensor_id=ULTRASONIC_01');
         if (!response.ok) throw new Error('Network response was not ok');
         
         const data = await response.json();
@@ -590,7 +590,7 @@ async function fetchParkingHistory1() {
 
 async function fetchParkingHistory2() {
     try {
-        const response = await fetch('http://192.168.1.21/backend-parking/tabel_parkir.php?sensor_id=ULTRASONIC_02');
+        const response = await fetch('http://localhost/backend-parking/tabel_parkir.php?sensor_id=ULTRASONIC_02');
         if (!response.ok) throw new Error('Network response was not ok');
         
         const data = await response.json();
@@ -667,9 +667,97 @@ function initializeStatusFetching() {
     setInterval(fetchParkingStatus2, 3000);
 }
 
-// Memulai sistem monitoring saat halaman dimuat
+
+//Fungsi untuk palang
+async function fetchServoStatus() {
+    try {
+        const response = await fetch("http://localhost/backend-parking/servo_get.php");
+        if (!response.ok) throw new Error("Gagal mengambil data");
+
+        const data = await response.json();
+        if (data.status === "success" && Array.isArray(data.data)) {
+            data.data.forEach((servo) => {
+                const statusElement = document.getElementById(
+                    servo.palang === "1" ? "status-message-1" : "status-message-2"
+                );
+
+                if (servo.value === "1") {
+                    statusElement.textContent =
+                        servo.palang === "1"
+                            ? "Palang Masuk Terbuka"
+                            : "Palang Keluar Terbuka";
+                    statusElement.style.color = "green";
+                } else {
+                    statusElement.textContent =
+                        servo.palang === "1"
+                            ? "Palang Masuk Tertutup"
+                            : "Palang Keluar Tertutup";
+                    statusElement.style.color = "red";
+                }
+            });
+        } else {
+            throw new Error("Data tidak valid");
+        }
+    } catch (error) {
+        console.error("Error mengambil status palang:", error);
+        const statusElement1 = document.getElementById("status-message-1");
+        const statusElement2 = document.getElementById("status-message-2");
+
+        statusElement1.textContent = "Gagal memuat status";
+        statusElement1.style.color = "red";
+
+        statusElement2.textContent = "Gagal memuat status";
+        statusElement2.style.color = "red";
+    }
+}
+
+//Fetch API Palang Status
+async function fetchServoStatus() {
+    try {
+        const response = await fetch("http://localhost/backend-parking/servo_get.php");
+        if (!response.ok) throw new Error("Gagal mengambil data");
+
+        const data = await response.json();
+        if (data.status === "success" && Array.isArray(data.data)) {
+            data.data.forEach((servo) => {
+                const statusElement = document.getElementById(
+                    servo.palang === "1" ? "status-message-1" : "status-message-2"
+                );
+
+                if (servo.value === "1") {
+                    statusElement.textContent =
+                        servo.palang === "1"
+                            ? "Palang Masuk Terbuka"
+                            : "Palang Keluar Terbuka";
+                    statusElement.style.color = "green";
+                } else {
+                    statusElement.textContent =
+                        servo.palang === "1"
+                            ? "Palang Masuk Tertutup"
+                            : "Palang Keluar Tertutup";
+                    statusElement.style.color = "red";
+                }
+            });
+        } else {
+            throw new Error("Data tidak valid");
+        }
+    } catch (error) {
+        console.error("Error mengambil status palang:", error);
+        const statusElement1 = document.getElementById("status-message-1");
+        const statusElement2 = document.getElementById("status-message-2");
+
+        statusElement1.textContent = "Gagal memuat status";
+        statusElement1.style.color = "red";
+
+        statusElement2.textContent = "Gagal memuat status";
+        statusElement2.style.color = "red";
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     initializeStatusFetching();
+    fetchServoStatus();
+    setInterval(fetchServoStatus, 3000);
 });
   </script>
   {% endblock %}
